@@ -1,0 +1,1 @@
+DROP POLICY "Anyone can insert donations" ON public.donations;
