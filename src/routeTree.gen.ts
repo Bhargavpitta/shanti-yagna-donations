@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiDonateRouteImport } from './routes/api/donate'
 import { Route as ApiRazorpayCreateOrderRouteImport } from './routes/api/razorpay.create-order'
+import { Route as ApiDonorsExportRouteImport } from './routes/api/donors.export'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,34 +29,52 @@ const ApiRazorpayCreateOrderRoute = ApiRazorpayCreateOrderRouteImport.update({
   path: '/api/razorpay/create-order',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiDonorsExportRoute = ApiDonorsExportRouteImport.update({
+  id: '/api/donors/export',
+  path: '/api/donors/export',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/donate': typeof ApiDonateRoute
+  '/api/donors/export': typeof ApiDonorsExportRoute
   '/api/razorpay/create-order': typeof ApiRazorpayCreateOrderRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/donate': typeof ApiDonateRoute
+  '/api/donors/export': typeof ApiDonorsExportRoute
   '/api/razorpay/create-order': typeof ApiRazorpayCreateOrderRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/api/donate': typeof ApiDonateRoute
+  '/api/donors/export': typeof ApiDonorsExportRoute
   '/api/razorpay/create-order': typeof ApiRazorpayCreateOrderRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/donate' | '/api/razorpay/create-order'
+  fullPaths:
+    | '/'
+    | '/api/donate'
+    | '/api/donors/export'
+    | '/api/razorpay/create-order'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/donate' | '/api/razorpay/create-order'
-  id: '__root__' | '/' | '/api/donate' | '/api/razorpay/create-order'
+  to: '/' | '/api/donate' | '/api/donors/export' | '/api/razorpay/create-order'
+  id:
+    | '__root__'
+    | '/'
+    | '/api/donate'
+    | '/api/donors/export'
+    | '/api/razorpay/create-order'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApiDonateRoute: typeof ApiDonateRoute
+  ApiDonorsExportRoute: typeof ApiDonorsExportRoute
   ApiRazorpayCreateOrderRoute: typeof ApiRazorpayCreateOrderRoute
 }
 
@@ -82,12 +101,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiRazorpayCreateOrderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/donors/export': {
+      id: '/api/donors/export'
+      path: '/api/donors/export'
+      fullPath: '/api/donors/export'
+      preLoaderRoute: typeof ApiDonorsExportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApiDonateRoute: ApiDonateRoute,
+  ApiDonorsExportRoute: ApiDonorsExportRoute,
   ApiRazorpayCreateOrderRoute: ApiRazorpayCreateOrderRoute,
 }
 export const routeTree = rootRouteImport
