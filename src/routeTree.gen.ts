@@ -10,33 +10,43 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiRazorpayCreateOrderRouteImport } from './routes/api/razorpay.create-order'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiRazorpayCreateOrderRoute = ApiRazorpayCreateOrderRouteImport.update({
+  id: '/api/razorpay/create-order',
+  path: '/api/razorpay/create-order',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/razorpay/create-order': typeof ApiRazorpayCreateOrderRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/razorpay/create-order': typeof ApiRazorpayCreateOrderRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/razorpay/create-order': typeof ApiRazorpayCreateOrderRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/api/razorpay/create-order'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/api/razorpay/create-order'
+  id: '__root__' | '/' | '/api/razorpay/create-order'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiRazorpayCreateOrderRoute: typeof ApiRazorpayCreateOrderRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,12 +58,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/razorpay/create-order': {
+      id: '/api/razorpay/create-order'
+      path: '/api/razorpay/create-order'
+      fullPath: '/api/razorpay/create-order'
+      preLoaderRoute: typeof ApiRazorpayCreateOrderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiRazorpayCreateOrderRoute: ApiRazorpayCreateOrderRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
