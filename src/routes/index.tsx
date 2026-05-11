@@ -246,12 +246,9 @@ function Index() {
           <div className="rounded-2xl bg-card border border-[var(--gold)]/40 p-6">
             <Phone className="w-8 h-8 text-saffron mb-3" />
             <h3 className="font-display text-lg text-deep-red">Call Us</h3>
-            <a
-              href="tel:+916300259174"
-              className="block mt-2 text-2xl font-bold text-saffron hover:underline"
-            >
+            <p className="block mt-2 text-2xl font-bold text-saffron">
               63002 59174
-            </a>
+            </p>
             <p className="text-xs text-muted-foreground mt-1">
               For sankalpa registration & queries
             </p>
@@ -283,13 +280,12 @@ function Index() {
             </h3>
             <div className="mt-3 flex flex-wrap gap-3">
               {phonepeNumbers.map((n) => (
-                <a
+                <span
                   key={n}
-                  href={`tel:+91${n}`}
-                  className="px-4 py-2 rounded-full bg-card border border-[var(--gold)]/60 text-deep-red font-mono font-semibold hover:bg-saffron hover:text-white transition"
+                  className="px-4 py-2 rounded-full bg-card border border-[var(--gold)]/60 text-deep-red font-mono font-semibold"
                 >
                   {n}
-                </a>
+                </span>
               ))}
             </div>
           </div>
