@@ -9,11 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiDonateRouteImport } from './routes/api/donate'
 import { Route as ApiRazorpayCreateOrderRouteImport } from './routes/api/razorpay.create-order'
 import { Route as ApiDonorsExportRouteImport } from './routes/api/donors.export'
+import { Route as ApiAdminSessionRouteImport } from './routes/api/admin.session'
+import { Route as ApiAdminLogoutRouteImport } from './routes/api/admin.logout'
+import { Route as ApiAdminLoginRouteImport } from './routes/api/admin.login'
+import { Route as ApiAdminDonationsRouteImport } from './routes/api/admin.donations'
 
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -34,23 +44,58 @@ const ApiDonorsExportRoute = ApiDonorsExportRouteImport.update({
   path: '/api/donors/export',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminSessionRoute = ApiAdminSessionRouteImport.update({
+  id: '/api/admin/session',
+  path: '/api/admin/session',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminLogoutRoute = ApiAdminLogoutRouteImport.update({
+  id: '/api/admin/logout',
+  path: '/api/admin/logout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminLoginRoute = ApiAdminLoginRouteImport.update({
+  id: '/api/admin/login',
+  path: '/api/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminDonationsRoute = ApiAdminDonationsRouteImport.update({
+  id: '/api/admin/donations',
+  path: '/api/admin/donations',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/api/donate': typeof ApiDonateRoute
+  '/api/admin/donations': typeof ApiAdminDonationsRoute
+  '/api/admin/login': typeof ApiAdminLoginRoute
+  '/api/admin/logout': typeof ApiAdminLogoutRoute
+  '/api/admin/session': typeof ApiAdminSessionRoute
   '/api/donors/export': typeof ApiDonorsExportRoute
   '/api/razorpay/create-order': typeof ApiRazorpayCreateOrderRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/api/donate': typeof ApiDonateRoute
+  '/api/admin/donations': typeof ApiAdminDonationsRoute
+  '/api/admin/login': typeof ApiAdminLoginRoute
+  '/api/admin/logout': typeof ApiAdminLogoutRoute
+  '/api/admin/session': typeof ApiAdminSessionRoute
   '/api/donors/export': typeof ApiDonorsExportRoute
   '/api/razorpay/create-order': typeof ApiRazorpayCreateOrderRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/api/donate': typeof ApiDonateRoute
+  '/api/admin/donations': typeof ApiAdminDonationsRoute
+  '/api/admin/login': typeof ApiAdminLoginRoute
+  '/api/admin/logout': typeof ApiAdminLogoutRoute
+  '/api/admin/session': typeof ApiAdminSessionRoute
   '/api/donors/export': typeof ApiDonorsExportRoute
   '/api/razorpay/create-order': typeof ApiRazorpayCreateOrderRoute
 }
@@ -58,28 +103,59 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/api/donate'
+    | '/api/admin/donations'
+    | '/api/admin/login'
+    | '/api/admin/logout'
+    | '/api/admin/session'
     | '/api/donors/export'
     | '/api/razorpay/create-order'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/donate' | '/api/donors/export' | '/api/razorpay/create-order'
+  to:
+    | '/'
+    | '/admin'
+    | '/api/donate'
+    | '/api/admin/donations'
+    | '/api/admin/login'
+    | '/api/admin/logout'
+    | '/api/admin/session'
+    | '/api/donors/export'
+    | '/api/razorpay/create-order'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/api/donate'
+    | '/api/admin/donations'
+    | '/api/admin/login'
+    | '/api/admin/logout'
+    | '/api/admin/session'
     | '/api/donors/export'
     | '/api/razorpay/create-order'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   ApiDonateRoute: typeof ApiDonateRoute
+  ApiAdminDonationsRoute: typeof ApiAdminDonationsRoute
+  ApiAdminLoginRoute: typeof ApiAdminLoginRoute
+  ApiAdminLogoutRoute: typeof ApiAdminLogoutRoute
+  ApiAdminSessionRoute: typeof ApiAdminSessionRoute
   ApiDonorsExportRoute: typeof ApiDonorsExportRoute
   ApiRazorpayCreateOrderRoute: typeof ApiRazorpayCreateOrderRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -108,15 +184,58 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiDonorsExportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/session': {
+      id: '/api/admin/session'
+      path: '/api/admin/session'
+      fullPath: '/api/admin/session'
+      preLoaderRoute: typeof ApiAdminSessionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/logout': {
+      id: '/api/admin/logout'
+      path: '/api/admin/logout'
+      fullPath: '/api/admin/logout'
+      preLoaderRoute: typeof ApiAdminLogoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/login': {
+      id: '/api/admin/login'
+      path: '/api/admin/login'
+      fullPath: '/api/admin/login'
+      preLoaderRoute: typeof ApiAdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/donations': {
+      id: '/api/admin/donations'
+      path: '/api/admin/donations'
+      fullPath: '/api/admin/donations'
+      preLoaderRoute: typeof ApiAdminDonationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   ApiDonateRoute: ApiDonateRoute,
+  ApiAdminDonationsRoute: ApiAdminDonationsRoute,
+  ApiAdminLoginRoute: ApiAdminLoginRoute,
+  ApiAdminLogoutRoute: ApiAdminLogoutRoute,
+  ApiAdminSessionRoute: ApiAdminSessionRoute,
   ApiDonorsExportRoute: ApiDonorsExportRoute,
   ApiRazorpayCreateOrderRoute: ApiRazorpayCreateOrderRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

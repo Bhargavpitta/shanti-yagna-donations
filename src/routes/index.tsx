@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Toaster } from "@/components/ui/sonner";
 import {
   CalendarDays,
   MapPin,
@@ -60,8 +59,6 @@ function Index() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Toaster richColors position="top-center" />
-
       {/* HERO */}
       <header className="relative overflow-hidden">
         <div
@@ -80,12 +77,20 @@ function Index() {
               Sri Krishna Jyothi Swarupanandha Trust
             </span>
           </div>
-          <a
-            href="#donate"
-            className="hidden sm:inline-flex items-center text-sm font-semibold text-deep-red hover:text-saffron transition"
-          >
-            Donate Now →
-          </a>
+          <div className="hidden items-center gap-5 sm:flex">
+            <a
+              href="/admin"
+              className="inline-flex items-center text-sm font-semibold text-deep-red hover:text-saffron transition"
+            >
+              Admin
+            </a>
+            <a
+              href="#donate"
+              className="inline-flex items-center text-sm font-semibold text-deep-red hover:text-saffron transition"
+            >
+              Donate Now →
+            </a>
+          </div>
         </nav>
 
         <div className="max-w-7xl mx-auto px-6 pt-12 pb-20 grid lg:grid-cols-[1fr_auto] gap-10 items-center">

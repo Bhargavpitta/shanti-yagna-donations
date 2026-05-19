@@ -109,6 +109,26 @@ export function RazorpayDonate() {
           email: parsed.data.email,
           contact: parsed.data.mobile,
         },
+        config: {
+          display: {
+            blocks: {
+              preferred: {
+                name: "Payment Options",
+                instruments: [
+                  { method: "upi" },
+                  { method: "card" },
+                  { method: "netbanking" },
+                  { method: "wallet" },
+                ],
+              },
+            },
+            hide: [{ method: "paylater" }],
+            sequence: ["block.preferred"],
+            preferences: {
+              show_default_blocks: false,
+            },
+          },
+        },
         theme: { color: "#FF6B00" },
         handler: async (resp: any) => {
           try {

@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import ExcelJS from "exceljs";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { getAdminSession } from "@/lib/admin-auth";
+import { listDonations } from "@/lib/db";
 
-// Admin-only export. Pass ?admin_key=... matching ADMIN_EXPORT_KEY env var.
 export const Route = createFileRoute("/api/donors/export")({
   server: {
     handlers: {
@@ -10,16 +10,18 @@ export const Route = createFileRoute("/api/donors/export")({
         const url = new URL(request.url);
         const key = url.searchParams.get("admin_key");
         const expected = process.env.ADMIN_EXPORT_KEY || "changeme";
-        if (!key || key !== expected) {
+        const session = getAdminSession(request);
+        const hasSession = !!session;
+        const hasLegacyKey = !!key && key === expected;
+
+        if (!hasSession && !hasLegacyKey) {
           return new Response("Unauthorized", { status: 401 });
         }
 
-        const { data, error } = await supabaseAdmin
-          .from("donations")
-          .select("*")
-          .order("created_at", { ascending: true });
-
-        if (error) {
+        let data;
+        try {
+          data = await listDonations();
+        } catch (error) {
           console.error(error);
           return new Response("Failed to load donors", { status: 500 });
         }

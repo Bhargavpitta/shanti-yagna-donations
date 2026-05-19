@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createHmac } from "crypto";
 import { z } from "zod";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { insertDonation } from "@/lib/db";
 
 const donationSchema = z.object({
   full_name: z.string().trim().min(1).max(120),
@@ -38,18 +38,18 @@ export const Route = createFileRoute("/api/donate")({
 
           const verified = expected === data.razorpay_signature;
 
-          const { error } = await supabaseAdmin.from("donations").insert({
-            full_name: data.full_name,
-            email: data.email,
-            mobile: data.mobile,
-            amount: data.amount,
-            gotra_message: data.gotra_message ?? null,
-            order_id: data.razorpay_order_id,
-            payment_id: data.razorpay_payment_id,
-            payment_status: verified ? "success" : "signature_mismatch",
-          });
-
-          if (error) {
+          try {
+            await insertDonation({
+              full_name: data.full_name,
+              email: data.email,
+              mobile: data.mobile,
+              amount: data.amount,
+              gotra_message: data.gotra_message ?? null,
+              order_id: data.razorpay_order_id,
+              payment_id: data.razorpay_payment_id,
+              payment_status: verified ? "success" : "signature_mismatch",
+            });
+          } catch (error) {
             console.error("DB insert error:", error);
             return Response.json({ error: "DB error" }, { status: 500 });
           }
