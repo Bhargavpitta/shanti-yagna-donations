@@ -14,6 +14,7 @@ import { MandalaDivider } from "@/components/MandalaDivider";
 import { RazorpayDonate } from "@/components/RazorpayDonate";
 import swamijiImg from "@/assets/swamiji.jpg";
 import yagnaHero from "@/assets/yagna-hero.jpg";
+import yamunaPushkaraluImg from "@/assets/yamuna-pushkaralu-2026.png";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -238,6 +239,17 @@ function Index() {
       </section>
 
       <MandalaDivider />
+
+      <section className="max-w-6xl mx-auto px-6 pb-12">
+        <img
+          src={yamunaPushkaraluImg}
+          alt="Yamuna Pushkaralu 2026 devotional gathering"
+          width={1264}
+          height={848}
+          className="w-full rounded-2xl border border-[var(--gold)]/50 shadow-divine"
+          loading="lazy"
+        />
+      </section>
 
       {/* CONTACT */}
       <section id="contact" className="max-w-6xl mx-auto px-6 py-12">
