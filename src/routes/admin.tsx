@@ -1,19 +1,12 @@
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import {
-  Download,
-  Flame,
-  IndianRupee,
-  LogOut,
-  ShieldCheck,
-  Sparkles,
-  Users,
-} from "lucide-react";
+import { Download, Flame, IndianRupee, LogOut, ShieldCheck, Sparkles, Users } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -56,6 +49,7 @@ function AdminPage() {
   const [loggingIn, setLoggingIn] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
   const [donations, setDonations] = useState<Donation[]>([]);
+  const showDashboardLoader = loadingData && donations.length === 0;
 
   useEffect(() => {
     checkSession();
@@ -155,9 +149,7 @@ function AdminPage() {
               <CardTitle className="font-display text-2xl text-deep-red">
                 Loading Dashboard
               </CardTitle>
-              <CardDescription>
-                Checking admin session and preparing donor records.
-              </CardDescription>
+              <CardDescription>Checking admin session and preparing donor records.</CardDescription>
             </CardHeader>
           </Card>
         </div>
@@ -175,11 +167,10 @@ function AdminPage() {
               <p className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.24em]">
                 <ShieldCheck className="h-3.5 w-3.5" /> Admin Access
               </p>
-              <h1 className="mt-4 font-display text-3xl font-bold">
-                Donor Dashboard
-              </h1>
+              <h1 className="mt-4 font-display text-3xl font-bold">Donor Dashboard</h1>
               <p className="mt-2 max-w-lg text-sm text-white/85">
-                Sign in to view donation records, verify donor details, and download the Excel report.
+                Sign in to view donation records, verify donor details, and download the Excel
+                report.
               </p>
             </div>
 
@@ -210,15 +201,14 @@ function AdminPage() {
                 </div>
                 <Button
                   type="submit"
-                  disabled={loggingIn}
+                  disabled={loggingIn || loadingData}
                   className="w-full bg-saffron text-white hover:opacity-90"
                   size="lg"
                 >
                   <ShieldCheck className="h-4 w-4" />
-                  {loggingIn ? "Signing In..." : "Login to Dashboard"}
+                  {loggingIn || loadingData ? "Opening Dashboard..." : "Login to Dashboard"}
                 </Button>
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
-                  
                   <Link to="/" className="text-deep-red hover:text-saffron">
                     Back to donation page
                   </Link>
@@ -241,19 +231,14 @@ function AdminPage() {
             <p className="inline-flex items-center gap-2 rounded-full bg-deep-red/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.24em] text-deep-red">
               <Sparkles className="h-3.5 w-3.5" /> Sacred Giving Ledger
             </p>
-            <h1 className="mt-3 font-display text-3xl font-bold text-deep-red">
-              Admin Dashboard
-            </h1>
+            <h1 className="mt-3 font-display text-3xl font-bold text-deep-red">Admin Dashboard</h1>
             <p className="mt-2 text-sm text-muted-foreground">
               Signed in as <span className="font-semibold text-deep-red">{session.username}</span>
             </p>
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Button
-              asChild
-              className="bg-saffron text-white hover:opacity-90"
-            >
+            <Button asChild className="bg-saffron text-white hover:opacity-90">
               <a href="/api/donors/export" target="_blank" rel="noreferrer">
                 <Download className="h-4 w-4" />
                 Download Excel
@@ -271,32 +256,40 @@ function AdminPage() {
         </div>
 
         <div className="mt-8 grid gap-5 md:grid-cols-3">
-          <StatsCard
-            title="Total Donors"
-            value={donations.length.toLocaleString("en-IN")}
-            note="All submitted donation records"
-            icon={<Users className="h-5 w-5 text-saffron" />}
-          />
-          <StatsCard
-            title="Successful Payments"
-            value={successCount.toLocaleString("en-IN")}
-            note="Rows verified by Razorpay signature"
-            icon={<ShieldCheck className="h-5 w-5 text-saffron" />}
-          />
-          <StatsCard
-            title="Total Amount"
-            value={`₹${totalAmount.toLocaleString("en-IN")}`}
-            note="Sum of all donation rows"
-            icon={<IndianRupee className="h-5 w-5 text-saffron" />}
-          />
+          {showDashboardLoader ? (
+            <>
+              <StatsCardSkeleton />
+              <StatsCardSkeleton />
+              <StatsCardSkeleton />
+            </>
+          ) : (
+            <>
+              <StatsCard
+                title="Total Donors"
+                value={donations.length.toLocaleString("en-IN")}
+                note="All submitted donation records"
+                icon={<Users className="h-5 w-5 text-saffron" />}
+              />
+              <StatsCard
+                title="Successful Payments"
+                value={successCount.toLocaleString("en-IN")}
+                note="Rows verified by Razorpay signature"
+                icon={<ShieldCheck className="h-5 w-5 text-saffron" />}
+              />
+              <StatsCard
+                title="Total Amount"
+                value={`₹${totalAmount.toLocaleString("en-IN")}`}
+                note="Sum of all donation rows"
+                icon={<IndianRupee className="h-5 w-5 text-saffron" />}
+              />
+            </>
+          )}
         </div>
 
         <Card className="mt-8 border-[var(--gold)]/40 bg-card/90 shadow-divine">
           <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <CardTitle className="font-display text-2xl text-deep-red">
-                Donor Records
-              </CardTitle>
+              <CardTitle className="font-display text-2xl text-deep-red">Donor Records</CardTitle>
               <CardDescription>
                 View donor details, payment IDs, sankalpa notes, and export the full ledger.
               </CardDescription>
@@ -312,59 +305,66 @@ function AdminPage() {
           </CardHeader>
           <CardContent>
             <div className="rounded-2xl border border-[var(--gold)]/35 bg-white/80">
-              <Table>
-                <TableHeader className="bg-cream/80">
-                  <TableRow>
-                    <TableHead className="px-4 py-3">Donor</TableHead>
-                    <TableHead className="px-4 py-3">Contact</TableHead>
-                    <TableHead className="px-4 py-3">Amount</TableHead>
-                    <TableHead className="px-4 py-3">Gotra / Message</TableHead>
-                    <TableHead className="px-4 py-3">Payment</TableHead>
-                    <TableHead className="px-4 py-3">Date</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {donations.length === 0 ? (
+              {showDashboardLoader ? (
+                <AdminTableSkeleton />
+              ) : (
+                <Table>
+                  <TableHeader className="bg-cream/80">
                     <TableRow>
-                      <TableCell colSpan={6} className="px-4 py-10 text-center text-muted-foreground">
-                        {loadingData
-                          ? "Loading donor records..."
-                          : "No donations found yet."}
-                      </TableCell>
+                      <TableHead className="px-4 py-3">Donor</TableHead>
+                      <TableHead className="px-4 py-3">Contact</TableHead>
+                      <TableHead className="px-4 py-3">Amount</TableHead>
+                      <TableHead className="px-4 py-3">Gotra / Message</TableHead>
+                      <TableHead className="px-4 py-3">Payment</TableHead>
+                      <TableHead className="px-4 py-3">Date</TableHead>
                     </TableRow>
-                  ) : (
-                    donations.map((donation) => (
-                      <TableRow key={donation.id}>
-                        <TableCell className="px-4 py-4">
-                          <div className="font-semibold text-deep-red">{donation.full_name}</div>
-                          <div className="mt-1 text-xs text-muted-foreground">
-                            Order: {donation.order_id || "N/A"}
-                          </div>
-                        </TableCell>
-                        <TableCell className="px-4 py-4">
-                          <div>{donation.email}</div>
-                          <div className="mt-1 text-xs text-muted-foreground">{donation.mobile}</div>
-                        </TableCell>
-                        <TableCell className="px-4 py-4 font-semibold text-saffron">
-                          ₹{Number(donation.amount).toLocaleString("en-IN")}
-                        </TableCell>
-                        <TableCell className="px-4 py-4 text-sm">
-                          {donation.gotra_message || "—"}
-                        </TableCell>
-                        <TableCell className="px-4 py-4">
-                          <div className="font-medium capitalize">{donation.payment_status}</div>
-                          <div className="mt-1 text-xs text-muted-foreground">
-                            Payment ID: {donation.payment_id || "N/A"}
-                          </div>
-                        </TableCell>
-                        <TableCell className="px-4 py-4 text-sm text-muted-foreground">
-                          {new Date(donation.created_at).toLocaleString("en-IN")}
+                  </TableHeader>
+                  <TableBody>
+                    {donations.length === 0 ? (
+                      <TableRow>
+                        <TableCell
+                          colSpan={6}
+                          className="px-4 py-10 text-center text-muted-foreground"
+                        >
+                          {loadingData ? "Refreshing donor records..." : "No donations found yet."}
                         </TableCell>
                       </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
+                    ) : (
+                      donations.map((donation) => (
+                        <TableRow key={donation.id}>
+                          <TableCell className="px-4 py-4">
+                            <div className="font-semibold text-deep-red">{donation.full_name}</div>
+                            <div className="mt-1 text-xs text-muted-foreground">
+                              Order: {donation.order_id || "N/A"}
+                            </div>
+                          </TableCell>
+                          <TableCell className="px-4 py-4">
+                            <div>{donation.email}</div>
+                            <div className="mt-1 text-xs text-muted-foreground">
+                              {donation.mobile}
+                            </div>
+                          </TableCell>
+                          <TableCell className="px-4 py-4 font-semibold text-saffron">
+                            ₹{Number(donation.amount).toLocaleString("en-IN")}
+                          </TableCell>
+                          <TableCell className="px-4 py-4 text-sm">
+                            {donation.gotra_message || "—"}
+                          </TableCell>
+                          <TableCell className="px-4 py-4">
+                            <div className="font-medium capitalize">{donation.payment_status}</div>
+                            <div className="mt-1 text-xs text-muted-foreground">
+                              Payment ID: {donation.payment_id || "N/A"}
+                            </div>
+                          </TableCell>
+                          <TableCell className="px-4 py-4 text-sm text-muted-foreground">
+                            {new Date(donation.created_at).toLocaleString("en-IN")}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -407,9 +407,7 @@ function StatsCard({
         <div className="flex items-center justify-between gap-3">
           <div>
             <CardDescription>{title}</CardDescription>
-            <CardTitle className="mt-2 font-display text-3xl text-deep-red">
-              {value}
-            </CardTitle>
+            <CardTitle className="mt-2 font-display text-3xl text-deep-red">{value}</CardTitle>
           </div>
           <div className="rounded-2xl bg-cream p-3">{icon}</div>
         </div>
@@ -418,5 +416,61 @@ function StatsCard({
         <p className="text-sm text-muted-foreground">{note}</p>
       </CardContent>
     </Card>
+  );
+}
+
+function StatsCardSkeleton() {
+  return (
+    <Card className="border-[var(--gold)]/40 bg-card/90 shadow-divine">
+      <CardHeader>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex-1 space-y-3">
+            <Skeleton className="h-4 w-28 bg-[var(--gold)]/15" />
+            <Skeleton className="h-10 w-32 bg-[var(--deep-red)]/10" />
+          </div>
+          <Skeleton className="h-12 w-12 rounded-2xl bg-[var(--gold)]/15" />
+        </div>
+      </CardHeader>
+      <CardContent>
+        <Skeleton className="h-4 w-48 bg-[var(--gold)]/12" />
+      </CardContent>
+    </Card>
+  );
+}
+
+function AdminTableSkeleton() {
+  return (
+    <div className="p-4">
+      <div className="grid grid-cols-6 gap-4 border-b border-[var(--gold)]/20 px-2 py-3">
+        <Skeleton className="h-4 bg-[var(--gold)]/15" />
+        <Skeleton className="h-4 bg-[var(--gold)]/15" />
+        <Skeleton className="h-4 bg-[var(--gold)]/15" />
+        <Skeleton className="h-4 bg-[var(--gold)]/15" />
+        <Skeleton className="h-4 bg-[var(--gold)]/15" />
+        <Skeleton className="h-4 bg-[var(--gold)]/15" />
+      </div>
+      {Array.from({ length: 5 }).map((_, index) => (
+        <div
+          key={index}
+          className="grid grid-cols-6 gap-4 border-b border-[var(--gold)]/10 px-2 py-4 last:border-b-0"
+        >
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-28 bg-[var(--deep-red)]/10" />
+            <Skeleton className="h-3 w-20 bg-[var(--gold)]/12" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-32 bg-[var(--gold)]/12" />
+            <Skeleton className="h-3 w-24 bg-[var(--gold)]/10" />
+          </div>
+          <Skeleton className="h-4 w-16 self-center bg-[var(--saffron)]/15" />
+          <Skeleton className="h-4 w-full self-center bg-[var(--gold)]/10" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-20 bg-[var(--gold)]/12" />
+            <Skeleton className="h-3 w-24 bg-[var(--gold)]/10" />
+          </div>
+          <Skeleton className="h-4 w-24 self-center bg-[var(--gold)]/10" />
+        </div>
+      ))}
+    </div>
   );
 }
