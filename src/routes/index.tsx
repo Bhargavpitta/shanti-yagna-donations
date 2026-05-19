@@ -8,10 +8,17 @@ import {
   Flame,
   Sparkles,
   Building2,
-  Smartphone,
+  Menu,
 } from "lucide-react";
 import { MandalaDivider } from "@/components/MandalaDivider";
 import { RazorpayDonate } from "@/components/RazorpayDonate";
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import swamijiImg from "@/assets/swamiji.jpg";
 import yagnaHero from "@/assets/yagna-hero.jpg";
 import yamunaPushkaraluImg from "@/assets/yamuna-pushkaralu-2026.png";
@@ -46,13 +53,6 @@ const rituals = [
   "Sri Maha Sudarsana with Sri Lakshmi Narayana",
 ];
 
-const phonepeNumbers = [
-  "9652440117",
-  "9640688116",
-  "8688991683",
-  "9148523427",
-];
-
 function Index() {
   const completed = 90;
   const total = 108;
@@ -78,19 +78,53 @@ function Index() {
               Sri Krishna Jyothi Swarupanandha Trust
             </span>
           </div>
-          <div className="hidden items-center gap-5 sm:flex">
-            <a
-              href="/admin"
-              className="inline-flex items-center text-sm font-semibold text-deep-red hover:text-saffron transition"
-            >
-              Admin
-            </a>
-            <a
-              href="#donate"
-              className="inline-flex items-center text-sm font-semibold text-deep-red hover:text-saffron transition"
-            >
-              Donate Now →
-            </a>
+
+          <div className="flex items-center gap-3">
+            <Sheet>
+              <SheetTrigger asChild>
+                <button
+                  type="button"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--deep-red)] text-deep-red transition hover:bg-deep-red/10 sm:hidden"
+                  aria-label="Open menu"
+                >
+                  <Menu className="h-5 w-5" />
+                </button>
+              </SheetTrigger>
+              <SheetContent side="top" className="pt-12">
+                <SheetHeader>
+                  <SheetTitle>Menu</SheetTitle>
+                </SheetHeader>
+                <div className="mt-6 space-y-4">
+                  <a
+                    href="/admin"
+                    className="block rounded-2xl border border-[var(--gold)] bg-card px-4 py-3 text-center text-sm font-semibold text-deep-red transition hover:bg-[var(--gold)]/10"
+                  >
+                    Admin
+                  </a>
+                  <a
+                    href="#donate"
+                    className="block rounded-2xl border border-[var(--gold)] bg-card px-4 py-3 text-center text-sm font-semibold text-deep-red transition hover:bg-[var(--gold)]/10"
+                  >
+                    Donate Now →
+                  </a>
+                </div>
+              </SheetContent>
+            </Sheet>
+
+            <div className="hidden items-center gap-5 sm:flex">
+              <a
+                href="/admin"
+                className="inline-flex items-center text-sm font-semibold text-deep-red hover:text-saffron transition"
+              >
+                Admin
+              </a>
+              <a
+                href="#donate"
+                className="inline-flex items-center text-sm font-semibold text-deep-red hover:text-saffron transition"
+              >
+                Donate Now →
+              </a>
+            </div>
           </div>
         </nav>
 
@@ -290,22 +324,6 @@ function Index() {
             </dl>
           </div>
 
-          <div className="rounded-2xl gradient-devotional border border-[var(--gold)]/40 p-6 lg:col-span-3">
-            <Smartphone className="w-8 h-8 text-saffron mb-3" />
-            <h3 className="font-display text-lg text-deep-red">
-              PhonePe Numbers
-            </h3>
-            <div className="mt-3 flex flex-wrap gap-3">
-              {phonepeNumbers.map((n) => (
-                <span
-                  key={n}
-                  className="px-4 py-2 rounded-full bg-card border border-[var(--gold)]/60 text-deep-red font-mono font-semibold"
-                >
-                  {n}
-                </span>
-              ))}
-            </div>
-          </div>
         </div>
       </section>
 
